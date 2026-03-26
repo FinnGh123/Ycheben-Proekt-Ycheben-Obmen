@@ -37,8 +37,9 @@ if (!$conn->connect_error) {
         if ($check && $check->num_rows > 0) {
             $row = $check->fetch_assoc();
             $del_file = $row['file_name'];
-            if ($del_file && file_exists('uploads/' . $del_file)) {
-                unlink('uploads/' . $del_file); // Remove from filesystem
+            $filepath = __DIR__ . '/uploads/' . $del_file;
+            if ($del_file && file_exists($filepath)) {
+                @unlink($filepath); // Force absolute path removal from filesystem
             }
             
             // Delete from database

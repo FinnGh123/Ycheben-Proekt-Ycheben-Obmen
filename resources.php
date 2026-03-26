@@ -19,32 +19,8 @@ if (!$conn->connect_error) {
         $conn->query("ALTER TABLE resources ADD COLUMN file_name VARCHAR(255)");
     }
 
-    // 2. Sync physical files into the database if they are missing
-    if (is_dir($uploadDirectory)) {
-        $files = scandir($uploadDirectory);
-        foreach ($files as $file) {
-            if ($file !== '.' && $file !== '..') {
-                $stmt = $conn->prepare("SELECT resource_id FROM resources WHERE file_name = ?");
-                if ($stmt) {
-                    $stmt->bind_param("s", $file);
-                    $stmt->execute();
-                    $stmt->store_result();
-                    if ($stmt->num_rows == 0) {
-                        // Insert orphan file
-                        $mtime = date('Y-m-d H:i:s', filemtime($uploadDirectory . $file));
-                        $title = htmlspecialchars($file);
-                        $insert = $conn->prepare("INSERT INTO resources (resource_name, file_name, created_at) VALUES (?, ?, ?)");
-                        if ($insert) {
-                            $insert->bind_param("sss", $title, $file, $mtime);
-                            $insert->execute();
-                            $insert->close();
-                        }
-                    }
-                    $stmt->close();
-                }
-            }
-        }
-    }
+    // Proceed to fetch all resources
+    // The legacy physical files have already been successfully catalogued into the database.
     
     // 3. Fetch all resources with uploader username
     $sql = "SELECT r.*, u.username FROM resources r LEFT JOIN users u ON r.created_by = u.user_id ORDER BY r.created_at DESC";
