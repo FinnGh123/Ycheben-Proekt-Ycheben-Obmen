@@ -55,16 +55,16 @@ if (isset($_FILES['file'])) {
             <li class="nav-item"><a href="index.php"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
             <li class="nav-item"><a href="resources.php"><i class='bx bx-library'></i> Resources</a></li>
             <li class="nav-item active"><a href="upload.php"><i class='bx bx-upload'></i> Publish</a></li>
-            <li class="nav-item"><a href="#"><i class='bx bx-message-square-dots'></i> Community</a></li>
+            <li class="nav-item"><a href="chat.php"><i class='bx bx-message-square-dots'></i> Community</a></li>
         </ul>
         
-        <div class="user-profile">
+        <a href="logout.php" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:12px; margin-top: auto; padding: 12px; background-color: rgba(0,0,0,0.2); border-radius: var(--border-radius); border: 1px solid var(--border-color); cursor:pointer;" class="user-profile-btn">
             <div class="avatar">Z</div>
             <div class="user-info">
                 <div class="name">Z9</div>
-                <div class="status">Active Now</div>
+                <div class="status">Click to Logout</div>
             </div>
-        </div>
+        </a>
         <div style="font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 15px;">
             Made By Z9
         </div>
