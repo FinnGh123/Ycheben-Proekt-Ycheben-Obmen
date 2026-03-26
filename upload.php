@@ -18,6 +18,34 @@ if (isset($_FILES['file'])) {
         if (move_uploaded_file($fileTmpPath, $destination)) {
             $message = 'File uploaded successfully: ' . htmlspecialchars($fileName);
             $msg_type = 'success';
+            
+            // Database integration: save metadata
+            session_start();
+            $servername = "localhost";
+            $db_user = "root";
+            $db_pass = "";
+            $dbname = "pleaseloveme";
+            $conn = new mysqli($servername, $db_user, $db_pass, $dbname);
+            
+            if (!$conn->connect_error) {
+                // Ensure file_name column exists
+                $col_check = $conn->query("SHOW COLUMNS FROM resources LIKE 'file_name'");
+                if ($col_check && $col_check->num_rows == 0) {
+                    $conn->query("ALTER TABLE resources ADD COLUMN file_name VARCHAR(255)");
+                }
+                
+                $title = isset($_POST['title']) ? $_POST['title'] : $fileName;
+                $desc = isset($_POST['description']) ? $_POST['description'] : '';
+                $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : NULL;
+                
+                $stmt = $conn->prepare("INSERT INTO resources (resource_name, resource_description, created_by, file_name) VALUES (?, ?, ?, ?)");
+                if ($stmt) {
+                    $stmt->bind_param("ssis", $title, $desc, $user_id, $fileName);
+                    $stmt->execute();
+                    $stmt->close();
+                }
+                $conn->close();
+            }
         } else {
             $message = 'Error moving the uploaded file.';
             $msg_type = 'error';
