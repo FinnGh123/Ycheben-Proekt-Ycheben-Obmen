@@ -1,9 +1,9 @@
 <?php
 // Database configuration
 $servername = "localhost";
-$username = "username";
-$password = "password";
-$dbname = "database_name";
+$username = "root"; // Using XAMPP default root user
+$password = ""; // Using XAMPP default empty password
+$dbname = "plzloveme"; // The user's actual database
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -42,6 +42,7 @@ $conn->close();
     <link rel="stylesheet" href="css/style.css">
     <style>
         .auth-container {
+            width: 100%;
             min-height: 100vh;
             display: flex;
             align-items: center;

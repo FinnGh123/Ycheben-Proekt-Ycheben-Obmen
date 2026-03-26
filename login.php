@@ -35,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="css/style.css">
     <style>
         .auth-container {
+            width: 100%;
             min-height: 100vh;
             display: flex;
             align-items: center;
