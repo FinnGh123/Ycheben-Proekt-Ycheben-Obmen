@@ -13,13 +13,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Simple authentication (replace with database check in real application)
-    if ($username === 'user' && $password === 'pass') {
-        $_SESSION['username'] = $username;
-        header('Location: index.php');
-        exit;
+    // Database connection
+    $servername = "localhost";
+    $db_user = "root";
+    $db_pass = "";
+    $dbname = "pleaseloveme";
+    
+    // Suppress warnings for clean UI
+    error_reporting(E_ERROR | E_PARSE);
+    $conn = new mysqli($servername, $db_user, $db_pass, $dbname);
+
+    if (!$conn->connect_error) {
+        $stmt = $conn->prepare("SELECT user_id, password_hash FROM users WHERE username = ?");
+        if ($stmt) {
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $stmt->store_result();
+            
+            if ($stmt->num_rows > 0) {
+                $stmt->bind_result($user_id, $password_hash);
+                $stmt->fetch();
+                
+                // Verify the hashed password
+                if (password_verify($password, $password_hash)) {
+                    $_SESSION['username'] = $username;
+                    $_SESSION['user_id'] = $user_id;
+                    header('Location: index.php');
+                    exit;
+                } else {
+                    $error = 'Invalid username or password.';
+                }
+            } else {
+                $error = 'Invalid username or password.';
+            }
+            $stmt->close();
+        } else {
+            $error = 'Database query failed.';
+        }
+        $conn->close();
     } else {
-        $error = 'Invalid username or password.';
+        $error = 'Database connection failed.';
     }
 }
 ?>
