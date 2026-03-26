@@ -1,4 +1,5 @@
 <?php
+session_start();
 $message = '';
 $msg_type = '';
 

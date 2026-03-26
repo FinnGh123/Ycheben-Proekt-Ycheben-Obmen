@@ -19,10 +19,18 @@ $msg = '';
 $msg_type = 'success';
 
 if (!$conn->connect_error) {
+    // Force find the true user ID to prevent old session bugs
+    $uid = 0;
+    $u_lookup = $conn->query("SELECT user_id FROM users WHERE username = '" . $conn->real_escape_string($_SESSION['username']) . "'");
+    if ($u_lookup && $u_lookup->num_rows > 0) {
+        $u_row = $u_lookup->fetch_assoc();
+        $uid = intval($u_row['user_id']);
+        $_SESSION['user_id'] = $uid; // Refresh session
+    }
+
     // Check for deletion request
-    if (isset($_GET['delete_id'])) {
+    if (isset($_GET['delete_id']) && $uid > 0) {
         $del_id = intval($_GET['delete_id']);
-        $uid = intval($_SESSION['user_id']);
         
         // Ensure user actually owns this file before deletion
         $check = $conn->query("SELECT file_name FROM resources WHERE resource_id = $del_id AND created_by = $uid");
@@ -41,6 +49,9 @@ if (!$conn->connect_error) {
                 $msg = "Error deleting resource from database.";
                 $msg_type = "error";
             }
+        } else {
+            $msg = "Unauthorized or resource not found.";
+            $msg_type = "error";
         }
     }
 

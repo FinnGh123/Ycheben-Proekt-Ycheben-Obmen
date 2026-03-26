@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Scan uploads directory for files to display as resources
 $uploadDirectory = 'uploads/';
 $resources_data = [];
