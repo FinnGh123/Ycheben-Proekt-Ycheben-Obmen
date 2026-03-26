@@ -21,7 +21,6 @@ if (isset($_FILES['file'])) {
             $msg_type = 'success';
             
             // Database integration: save metadata
-            session_start();
             $servername = "localhost";
             $db_user = "root";
             $db_pass = "";
