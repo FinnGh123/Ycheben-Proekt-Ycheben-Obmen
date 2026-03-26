@@ -6,7 +6,7 @@ session_start();
 $servername = "localhost";
 $username = "root"; // Update with XAMPP default
 $password = ""; // Update with XAMPP default
-$dbname = "plzloveme"; // The user's actual database name
+$dbname = "pleaseloveme"; // The user's actual database name
 
 // Suppress mysqli warnings if DB not fully set up yet for clean UI
 error_reporting(E_ERROR | E_PARSE);
