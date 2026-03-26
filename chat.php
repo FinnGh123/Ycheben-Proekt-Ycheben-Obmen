@@ -168,11 +168,11 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
             <li class="nav-item active"><a href="chat.php"><i class='bx bx-message-square-dots'></i> Community</a></li>
         </ul>
         
-        <a href="logout.php" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:12px; margin-top: auto; padding: 12px; background-color: rgba(0,0,0,0.2); border-radius: var(--border-radius); border: 1px solid var(--border-color); cursor:pointer;" class="user-profile-btn">
-            <div class="avatar">Z</div>
+        <a href="profile.php" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:12px; margin-top: auto; padding: 12px; background-color: rgba(99, 102, 241, 0.2); border-radius: var(--border-radius); border: 1px solid var(--primary); cursor:pointer;" class="user-profile-btn">
+            <div class="avatar"><?php echo strtoupper(substr($_SESSION['username'] ?? 'U', 0, 1)); ?></div>
             <div class="user-info">
-                <div class="name">Z9</div>
-                <div class="status">Click to Logout</div>
+                <div class="name"><?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?></div>
+                <div class="status" style="color: var(--primary);">View Profile</div>
             </div>
         </a>
         <div style="font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 15px;">
@@ -184,10 +184,14 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
     <main class="main-content">
         <header class="page-header">
             <h1 class="page-title">Community Chat</h1>
-            <div class="header-actions">
-                <span style="color: var(--text-muted); font-size: 0.9rem;">
-                    <?php if(!$db_connected) echo "<span style='color:var(--danger)'><i class='bx bx-error'></i> Reconnect Database ('plzloveme')</span>"; else echo "<i class='bx bx-wifi'></i> Live"; ?>
+            <div class="header-actions" style="display: flex; align-items: center;">
+                <span style="color: var(--text-muted); font-size: 0.9rem; margin-right: 20px;">
+                    <?php if(!$db_connected) echo "<span style='color:var(--danger)'><i class='bx bx-error'></i> Database Error</span>"; else echo "<i class='bx bx-wifi'></i> Live"; ?>
                 </span>
+                <a href="profile.php" class="btn btn-outline" style="border: 1px solid var(--primary); color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; margin-right: 15px;">
+                    <i class='bx bx-user-circle' style="font-size: 1.2rem; color: var(--primary);"></i> My Profile
+                </a>
+                <a href="logout.php" class="logout-btn" style="text-decoration: none;">LOGOUT</a>
             </div>
         </header>
 
