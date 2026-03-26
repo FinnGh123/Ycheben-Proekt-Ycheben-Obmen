@@ -21,10 +21,10 @@ if ($conn->connect_error) {
 function fetchMessages($conn) {
     if (!$conn) return [];
     
-    // Create table if not exists
-    $conn->query("CREATE TABLE IF NOT EXISTS messages (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(50), message TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)");
+    // Create table if not exists with a unique name to avoid legacy schema conflicts
+    $conn->query("CREATE TABLE IF NOT EXISTS community_messages (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(50), message TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)");
     
-    $sql = "SELECT * FROM messages ORDER BY created_at ASC LIMIT 50";
+    $sql = "SELECT * FROM community_messages ORDER BY created_at ASC LIMIT 50";
     $result = $conn->query($sql);
     $messages = [];
     if ($result) {
@@ -39,7 +39,7 @@ function fetchMessages($conn) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $db_connected) {
     $message = $_POST['message'];
     $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'Anonymous';
-    $stmt = $conn->prepare("INSERT INTO messages (username, message) VALUES (?, ?)");
+    $stmt = $conn->prepare("INSERT INTO community_messages (username, message) VALUES (?, ?)");
     if ($stmt) {
         $stmt->bind_param("ss", $username, $message);
         $stmt->execute();
