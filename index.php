@@ -1,5 +1,9 @@
 <?php
-// Session logic would normally go here
+session_start();
+if (!isset($_SESSION['username'])) {
+    header('Location: login.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,7 +62,7 @@
 
         <div class="card animate-fade-in">
             <div class="card-header">
-                <h2 class="card-title">Welcome back, Z9!</h2>
+                <h2 class="card-title">Welcome back, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h2>
                 <p class="card-subtitle">Here is an overview of the educational resources platform.</p>
             </div>
             

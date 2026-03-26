@@ -141,7 +141,7 @@ if (isset($_FILES['file'])) {
                         <i class='bx bx-cloud-upload'></i>
                         <p>Click to browse or drag and drop your file here</p>
                         <p class="helper-text">Max size 25MB (PDF, DOCX, ZIP, JPG)</p>
-                        <input type="file" id="file-upload" name="file" required>
+                        <input type="file" id="file-upload" name="file" required onclick="event.stopPropagation()">
                     </div>
                 </div>
 
