@@ -13,18 +13,26 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Initialize messages
+$success_msg = '';
+$error_msg = '';
+
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
+    $username = $conn->real_escape_string($_POST['name']);
+    $email = $conn->real_escape_string($_POST['email']);
     $password = $_POST['password'];
+    
+    // Securely hash the password according to the schema password_hash column
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-    // Insert user's details into the database
-    $sql = "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password')";
+    // Insert user's details using the correct columns -> username, email, password_hash
+    $sql = "INSERT INTO users (username, email, password_hash) VALUES ('$username', '$email', '$password_hash')";
+    
     if ($conn->query($sql) === TRUE) {
-        echo "New record created successfully";
+        $success_msg = "Account created successfully! You can now log in.";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        $error_msg = "Registration failed: " . $conn->error;
     }
 }
 
@@ -79,11 +87,23 @@ $conn->close();
         <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center;">Create an Account</h2>
         <p style="color: var(--text-muted); text-align: center; margin-bottom: 2rem; font-size: 0.9rem;">Join the educational resources platform</p>
         
+        <?php if ($error_msg): ?>
+            <div class="notification error" style="padding: 10px; font-size: 0.85rem; text-align: center; margin-bottom: 1.5rem;">
+                <?= htmlspecialchars($error_msg) ?>
+            </div>
+        <?php endif; ?>
+        
+        <?php if ($success_msg): ?>
+            <div class="notification success" style="padding: 10px; font-size: 0.85rem; text-align: center; margin-bottom: 1.5rem; background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; border-radius: 8px;">
+                <?= $success_msg ?>
+            </div>
+        <?php endif; ?>
+        
         <form method="POST" action="register.php">
             <div class="form-group">
-                <label for="name" class="form-label">Full Name</label>
+                <label for="name" class="form-label">Username</label>
                 <div style="position: relative;">
-                    <i class='bx bx-id-card' style="position: absolute; left: 12px; top: 14px; color: var(--text-muted);"></i>
+                    <i class='bx bx-user' style="position: absolute; left: 12px; top: 14px; color: var(--text-muted);"></i>
                     <input type="text" id="name" name="name" class="form-control" style="padding-left: 35px;" required>
                 </div>
             </div>
